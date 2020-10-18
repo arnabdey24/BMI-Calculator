@@ -1,3 +1,5 @@
+import 'package:audioplayers/audio_cache.dart';
+import 'bmiCalculator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'OurCard.dart';
@@ -211,7 +213,22 @@ class _MainPageState extends State<MainPage> {
             ),
             GestureDetector(
               onTap: (){
-                Navigator.push(context,MaterialPageRoute(builder: (context)=>ResultPage()));
+                if(select!=null) {
+                  BMI bmi = BMI(height, weight);
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) =>
+                      ResultPage(
+                        value: bmi.value(),
+                        status: bmi.getStatus(),
+                        msg: bmi.getMsg(),
+                      )));
+                }
+                else{
+                  AudioCache player=AudioCache();
+                  player.play("beep.wav");
+                  print("arnab");
+
+                }
               },
               child: Container(
                 alignment: Alignment.center,
@@ -220,7 +237,7 @@ class _MainPageState extends State<MainPage> {
                   style: numberStyle.copyWith(fontSize: 30,),
                 ),
                 margin: EdgeInsets.only(top: 10),
-                color: Colors.blue,
+                color: (select==null)?Colors.indigo:Colors.blue,
                 height: 70,
                 width: double.infinity,
               ),
