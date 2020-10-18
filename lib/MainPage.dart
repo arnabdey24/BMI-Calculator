@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'OurCard.dart';
+import 'GenCard.dart';
+import 'Button_icon.dart';
+import 'Result_page.dart';
+
+const numberStyle = TextStyle(
+  fontSize: 50,
+  fontWeight: FontWeight.w900,
+);
+
+enum Gender { male, female }
 
 class MainPage extends StatefulWidget {
   @override
@@ -7,6 +18,10 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  Gender select;
+  int height = 150;
+  int weight = 50;
+  int age = 25;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,51 +35,37 @@ class _MainPageState extends State<MainPage> {
               child: Row(
                 children: [
                   Expanded(
-                    child: OurCard(
-                      colour: Colors.white10,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.mars,
-                            size: 80,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            "MALE",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
-                          )
-                        ],
-                      ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          select = Gender.male;
+                        });
+                      },
+                      child: OurCard(
+                          colour: select == Gender.male
+                              ? Colors.blue
+                              : Colors.white10,
+                          child: GenCard(
+                            icon: FontAwesomeIcons.mars,
+                            label: "MALE",
+                          )),
                     ),
                   ),
                   Expanded(
-                    child: OurCard(
-                      colour: Colors.white10,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.female,
-                            size: 80,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            "FEMALE",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
-                          )
-                        ],
-                      ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          select = Gender.female;
+                        });
+                      },
+                      child: OurCard(
+                          colour: select == Gender.female
+                              ? Colors.blue
+                              : Colors.white10,
+                          child: GenCard(
+                            icon: FontAwesomeIcons.venus,
+                            label: "FEMALE",
+                          )),
                     ),
                   ),
                 ],
@@ -78,30 +79,36 @@ class _MainPageState extends State<MainPage> {
                   children: [
                     Text(
                       "HEIGHT",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
-                      ),
+                      style: textStyle,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          "192",
-                          style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          height.toString(),
+                          style: numberStyle,
+                        ),
+                        SizedBox(
+                          width: 5,
                         ),
                         Text(
                           "cm",
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: textStyle.copyWith(fontSize: 15),
                         ),
                       ],
                     ),
+                    Slider(
+                      value: height.toDouble(),
+                      max: 220,
+                      min: 120,
+                      onChanged: (double newVal) {
+                        setState(() {
+                          height = newVal.round();
+                        });
+                      },
+                    )
                   ],
                 ),
               ),
@@ -117,32 +124,36 @@ class _MainPageState extends State<MainPage> {
                         children: [
                           Text(
                             "WEIGHT",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
+                            style: textStyle,
                           ),
                           Text(
-                            "87",
-                            style: TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            weight.toString(),
+                            style: numberStyle,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FloatingActionButton(
-                                  child: Icon(Icons.add),
-                                ),
+                              ButtonIcon(
+                                tag: '1',
+                                icon: FontAwesomeIcons.minus,
+                                onPress: () {
+                                  setState(() {
+                                    weight -= 1;
+                                    if (weight < 0) weight = 0;
+                                  });
+                                },
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FloatingActionButton(
-                                  child: Icon(Icons.add),
-                                ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              ButtonIcon(
+                                tag: '2',
+                                onPress: () {
+                                  setState(() {
+                                    weight += 1;
+                                  });
+                                },
+                                icon: FontAwesomeIcons.plus,
                               ),
                             ],
                           )
@@ -157,33 +168,37 @@ class _MainPageState extends State<MainPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "WEIGHT",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
+                            "AGE",
+                            style: textStyle,
                           ),
                           Text(
-                            "87",
-                            style: TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            age.toString(),
+                            style: numberStyle,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FloatingActionButton(
-                                  child: Icon(Icons.add),
-                                ),
+                              ButtonIcon(
+                                tag: "3",
+                                icon: FontAwesomeIcons.minus,
+                                onPress: () {
+                                  setState(() {
+                                    age -= 1;
+                                    if (age < 0) age = 0;
+                                  });
+                                },
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FloatingActionButton(
-                                  child: Icon(Icons.add),
-                                ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              ButtonIcon(
+                                tag: '4',
+                                onPress: () {
+                                  setState(() {
+                                    age += 1;
+                                  });
+                                },
+                                icon: FontAwesomeIcons.plus,
                               ),
                             ],
                           )
@@ -194,27 +209,24 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
             ),
+            GestureDetector(
+              onTap: (){
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>ResultPage()));
+              },
+              child: Container(
+                alignment: Alignment.center,
+                child: Text(
+                  'CALCULATE',
+                  style: numberStyle.copyWith(fontSize: 30,),
+                ),
+                margin: EdgeInsets.only(top: 10),
+                color: Colors.blue,
+                height: 70,
+                width: double.infinity,
+              ),
+            ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class OurCard extends StatelessWidget {
-  final Color colour;
-  final Widget child;
-
-  OurCard({@required this.colour, this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: child,
-      margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: colour,
-        borderRadius: BorderRadius.circular(10),
       ),
     );
   }
